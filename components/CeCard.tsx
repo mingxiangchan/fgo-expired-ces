@@ -16,14 +16,14 @@ export const CeCard = (props: PropsWithChildren<Props>): React.ReactNode => {
 
   return (
     <div style={style}>
-      <div>
-        {ce.name} {ce.atkBase}
-      </div>
-      <div>
+      <div style={{ textAlign: "center" }}>{ce.name.substring(0, 20)}</div>
+      <div style={{ height: "80%", position: "relative" }}>
         <Image
           alt={ce.name}
           src={Object.values(ce.extraAssets.charaGraph.equip)[0]}
           layout="fill"
+          title={ce.skills[0]?.detail}
+          objectFit="contain"
         />
       </div>
     </div>

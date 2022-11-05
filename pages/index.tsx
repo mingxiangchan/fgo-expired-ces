@@ -23,6 +23,9 @@ export async function getStaticProps() {
 const Home: NextPage = (props: { craftEssences: CraftEssence[] }) => {
   const sortedCes = [...props.craftEssences];
 
+  const colsCount = 5;
+  const rowsCount = Math.floor(sortedCes.length / colsCount);
+
   // sort by ascending base atk
   sortedCes.sort((first, second) => {
     if (first.atkBase > second.atkBase) {
@@ -44,10 +47,10 @@ const Home: NextPage = (props: { craftEssences: CraftEssence[] }) => {
         <h1 className={styles.title}>Stop Hoarding</h1>
         <p>Sorted by ascending ATK</p>
         <Grid
-          columnCount={5}
+          columnCount={colsCount}
           columnWidth={200}
-          rowCount={10}
-          rowHeight={300}
+          rowCount={rowsCount}
+          rowHeight={400}
           height={800}
           width={1000}
           itemData={sortedCes}

@@ -19,6 +19,8 @@ export interface CraftEssence {
     };
   };
   skills: {
+    name: string;
+    detail: string;
     functions: {
       funcGroup: {
         eventId: number;
