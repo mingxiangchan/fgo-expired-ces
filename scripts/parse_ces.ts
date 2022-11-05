@@ -1,23 +1,6 @@
 import get from "axios";
 import { readFileSync, writeFile } from "fs";
-
-interface Event {
-  id: number;
-  name: string;
-  type: string;
-  shop: unknown[];
-}
-
-interface CraftEssence {
-  name: string;
-  skills: {
-    functions: {
-      funcGroup: {
-        eventId: number;
-      }[];
-    }[];
-  }[];
-}
+import { Event, CraftEssence } from "../types";
 
 const queryFromApiOrCache = async <T>(
   source: string,
