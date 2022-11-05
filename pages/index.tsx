@@ -48,11 +48,11 @@ const Home: NextPage = (props: { craftEssences: CraftEssence[] }) => {
         <p>Sorted by ascending ATK</p>
         <Grid
           columnCount={colsCount}
-          columnWidth={200}
+          columnWidth={250}
           rowCount={rowsCount}
-          rowHeight={400}
+          rowHeight={500}
           height={800}
-          width={1000}
+          width={1250}
           itemData={sortedCes}
         >
           {CeCard}

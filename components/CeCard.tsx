@@ -11,8 +11,20 @@ type Props = {
 
 export const CeCard = (props: PropsWithChildren<Props>): React.ReactNode => {
   const { columnIndex, rowIndex, data, style } = props;
-  const idx = columnIndex * 5 + rowIndex;
+  const idx = rowIndex * 5 + columnIndex;
   const ce = data[idx];
+  const url = `https://apps.atlasacademy.io/db/NA/craft-essence/${ce.id}`;
+
+  const eventIds = new Set<number>();
+  for (const skill of ce.skills) {
+    for (const func of skill.functions) {
+      for (const effect of func.funcGroup) {
+        if (effect.eventId) {
+          eventIds.add(effect.eventId);
+        }
+      }
+    }
+  }
 
   return (
     <div style={style}>
@@ -25,6 +37,14 @@ export const CeCard = (props: PropsWithChildren<Props>): React.ReactNode => {
           title={ce.skills[0]?.detail}
           objectFit="contain"
         />
+      </div>
+      <div style={{ textAlign: "center", fontSize: "10px" }}>
+        {ce.skills[0]?.detail}
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <a href={url}>
+          <button>View Info</button>
+        </a>
       </div>
     </div>
   );
