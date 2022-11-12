@@ -28,3 +28,12 @@ export interface CraftEssence {
     }[];
   }[];
 }
+
+export enum SortOption {
+  alpAsc = "Alphabetically (ascending)",
+  alpDesc = "Alphabetically (descending)",
+  atkAsc = "ATK (ascending)",
+  atkDesc = "ATK (descending)",
+  hpAsc = "HP (ascending)",
+  hpDesc = "HP (descending)",
+}
