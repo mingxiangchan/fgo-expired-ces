@@ -6,8 +6,21 @@ export interface Event {
 }
 
 export interface CraftEssence {
+  id: number;
   name: string;
+  atkBase: number;
+  hpBase: number;
+  cost: number;
+  extraAssets: {
+    charaGraph: {
+      equip: {
+        [id: string]: string;
+      };
+    };
+  };
   skills: {
+    name: string;
+    detail: string;
     functions: {
       funcGroup: {
         eventId: number;
