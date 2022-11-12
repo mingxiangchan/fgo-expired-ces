@@ -30,8 +30,10 @@ export interface CraftEssence {
 }
 
 export enum SortOption {
-  atkDesc = "ATK (descending)",
+  alpAsc = "Alphabetically (ascending)",
+  alpDesc = "Alphabetically (descending)",
   atkAsc = "ATK (ascending)",
-  hpDesc = "HP (descending)",
+  atkDesc = "ATK (descending)",
   hpAsc = "HP (ascending)",
+  hpDesc = "HP (descending)",
 }

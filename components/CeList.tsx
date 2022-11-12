@@ -12,6 +12,12 @@ export const CeList = ({ craftEssences, sortOption }: Props) => {
 
   // sort by ascending base atk
   sortedCes.sort((first, second) => {
+    if (sortOption === SortOption.alpAsc) {
+      return first.name > second.name ? 1 : -1;
+    }
+    if (sortOption === SortOption.alpDesc) {
+      return first.name < second.name ? 1 : -1;
+    }
     if (sortOption === SortOption.atkAsc) {
       return first.atkBase > second.atkBase ? 1 : -1;
     }
