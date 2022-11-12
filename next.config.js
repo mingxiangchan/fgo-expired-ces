@@ -4,6 +4,7 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ["static.atlasacademy.io"],
+    unoptimized: true,
   },
 };
 

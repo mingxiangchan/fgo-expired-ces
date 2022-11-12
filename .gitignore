@@ -39,3 +39,6 @@ cache.json
 equip.json
 results.json
 event.json
+
+# Local Netlify folder
+.netlify

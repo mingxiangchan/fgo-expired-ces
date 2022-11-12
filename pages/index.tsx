@@ -8,10 +8,14 @@ import { FixedSizeGrid as Grid } from "react-window";
 import { CeCard } from "../components/CeCard";
 import Image from "next/image";
 
+type Props = {
+  craftEssences: CraftEssence[];
+};
+
 export async function getStaticProps() {
   const filePath = path.join(process.cwd(), "public/results.json");
   const jsonData = await fsPromises.readFile(filePath);
-  const craftEssences = JSON.parse(jsonData);
+  const craftEssences = JSON.parse(jsonData as unknown as string);
 
   return {
     props: {
@@ -20,7 +24,7 @@ export async function getStaticProps() {
   };
 }
 
-const Home: NextPage = (props: { craftEssences: CraftEssence[] }) => {
+const Home: NextPage<Props> = (props) => {
   const sortedCes = [...props.craftEssences];
 
   const colsCount = 5;
@@ -45,8 +49,12 @@ const Home: NextPage = (props: { craftEssences: CraftEssence[] }) => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Stop Hoarding</h1>
-        <p>Sorted by ascending ATK</p>
-        <Grid
+        <p>
+          Sorted by ascending ATK. Includes all CEs which have effects for more
+          than 1 event (reruns are a separate event ID). Click View Info to
+          confirm affected events
+        </p>
+        <Grid<CraftEssence[]>
           columnCount={colsCount}
           columnWidth={250}
           rowCount={rowsCount}

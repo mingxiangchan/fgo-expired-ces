@@ -1,15 +1,8 @@
-import { PropsWithChildren } from "react";
 import { CraftEssence } from "../types";
 import Image from "next/image";
+import { GridChildComponentProps } from "react-window";
 
-type Props = {
-  columnIndex: number;
-  rowIndex: number;
-  data: CraftEssence[];
-  style: object;
-};
-
-export const CeCard = (props: PropsWithChildren<Props>): React.ReactNode => {
+export const CeCard = (props: GridChildComponentProps<CraftEssence[]>) => {
   const { columnIndex, rowIndex, data, style } = props;
   const idx = rowIndex * 5 + columnIndex;
   const ce = data[idx];
