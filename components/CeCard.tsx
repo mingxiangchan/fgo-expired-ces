@@ -1,10 +1,11 @@
 import { CraftEssence } from "../types";
 import Image from "next/image";
 import { GridChildComponentProps } from "react-window";
+import { NUM_COLUMNS } from "../utils/constants";
 
 export const CeCard = (props: GridChildComponentProps<CraftEssence[]>) => {
   const { columnIndex, rowIndex, data, style } = props;
-  const idx = rowIndex * 5 + columnIndex;
+  const idx = rowIndex * NUM_COLUMNS + columnIndex;
   const ce = data[idx];
   const url = `https://apps.atlasacademy.io/db/NA/craft-essence/${ce.id}`;
 

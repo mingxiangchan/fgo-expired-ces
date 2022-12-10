@@ -1,10 +1,11 @@
-import { CraftEssence, SortOption } from "../types";
+import { CraftEssence, SortOptions } from "../types";
 import { FixedSizeGrid as Grid } from "react-window";
 import { CeCard } from "../components/CeCard";
+import { NUM_COLUMNS } from "../utils/constants";
 
 type Props = {
   craftEssences: CraftEssence[];
-  sortOption: SortOption;
+  sortOption: SortOptions;
 };
 
 export const CeList = ({ craftEssences, sortOption }: Props) => {
@@ -12,34 +13,33 @@ export const CeList = ({ craftEssences, sortOption }: Props) => {
 
   // sort by ascending base atk
   sortedCes.sort((first, second) => {
-    if (sortOption === SortOption.alpAsc) {
+    if (sortOption === SortOptions.alpAsc) {
       return first.name > second.name ? 1 : -1;
     }
-    if (sortOption === SortOption.alpDesc) {
+    if (sortOption === SortOptions.alpDesc) {
       return first.name < second.name ? 1 : -1;
     }
-    if (sortOption === SortOption.atkAsc) {
+    if (sortOption === SortOptions.atkAsc) {
       return first.atkBase > second.atkBase ? 1 : -1;
     }
-    if (sortOption === SortOption.atkDesc) {
+    if (sortOption === SortOptions.atkDesc) {
       return first.atkBase < second.atkBase ? 1 : -1;
     }
-    if (sortOption === SortOption.hpAsc) {
+    if (sortOption === SortOptions.hpAsc) {
       return first.hpBase > second.hpBase ? 1 : -1;
     }
-    if (sortOption === SortOption.hpDesc) {
+    if (sortOption === SortOptions.hpDesc) {
       return first.hpBase < second.hpBase ? 1 : -1;
     }
     return 0;
   });
 
-  const colsCount = 5;
-  const rowsCount = Math.floor(sortedCes.length / colsCount);
+  const rowsCount = Math.floor(sortedCes.length / NUM_COLUMNS);
 
   return (
     <Grid<CraftEssence[]>
-      columnCount={colsCount}
-      columnWidth={250}
+      columnCount={NUM_COLUMNS}
+      columnWidth={1250}
       rowCount={rowsCount}
       rowHeight={500}
       height={800}

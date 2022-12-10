@@ -29,7 +29,7 @@ export interface CraftEssence {
   }[];
 }
 
-export enum SortOption {
+export enum SortOptions {
   alpAsc = "Alphabetically (ascending)",
   alpDesc = "Alphabetically (descending)",
   atkAsc = "ATK (ascending)",
