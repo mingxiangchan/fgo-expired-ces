@@ -1,6 +1,6 @@
 import { CraftEssence, SortOptions } from "../types";
-import { FixedSizeGrid as Grid } from "react-window";
-import { CeCard } from "../components/CeCard";
+import { List } from "antd";
+import { CeCard } from "./CeCard";
 import { NUM_COLUMNS } from "../utils/constants";
 
 type Props = {
@@ -34,19 +34,18 @@ export const CeList = ({ craftEssences, sortOption }: Props) => {
     return 0;
   });
 
-  const rowsCount = Math.floor(sortedCes.length / NUM_COLUMNS);
-
   return (
-    <Grid<CraftEssence[]>
-      columnCount={NUM_COLUMNS}
-      columnWidth={1250}
-      rowCount={rowsCount}
-      rowHeight={500}
-      height={800}
-      width={1250}
-      itemData={sortedCes}
-    >
-      {CeCard}
-    </Grid>
+    <List
+      dataSource={sortedCes}
+      grid={{
+        gutter: 0,
+        column: NUM_COLUMNS,
+      }}
+      renderItem={(item) => (
+        <List.Item>
+          <CeCard ce={item} />
+        </List.Item>
+      )}
+    ></List>
   );
 };

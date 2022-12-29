@@ -6,8 +6,8 @@ import styles from "../styles/PageLayout.module.css";
 
 export const PageLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Layout className={styles.layout}>
-      <Sider breakpoint="lg" collapsedWidth="0">
+    <Layout hasSider>
+      <Sider breakpoint="lg" collapsedWidth="0" className={styles.sider}>
         <div className={styles.logo} />
         <Menu
           theme="dark"
@@ -22,7 +22,7 @@ export const PageLayout = ({ children }: PropsWithChildren) => {
           ]}
         />
       </Sider>
-      <Layout className="site-layout">
+      <Layout className={styles["site-layout"]}>
         <Header
           className="site-layout-background"
           style={{

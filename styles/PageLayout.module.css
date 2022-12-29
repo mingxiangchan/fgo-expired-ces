@@ -27,4 +27,14 @@
 .content {
   margin: "24px 16px";
   padding: 24;
+  overflow-y: "scroll";
+}
+
+.sider {
+  overflow: 'auto';
+  height: '100vh';
+  position: 'fixed';
+  left: 0;
+  top: 0;
+  bottom: 0;
 }
