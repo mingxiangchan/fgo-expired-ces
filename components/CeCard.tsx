@@ -1,6 +1,6 @@
 import { CraftEssence } from "../types";
 import { Card, Typography } from "antd";
-import { EllipsisOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 type Props = {
   ce: CraftEssence;
@@ -21,7 +21,14 @@ export const CeCard = ({ ce }: Props) => {
 
   return (
     <Card
-      actions={[<EllipsisOutlined key="ellipsis" />]}
+      actions={[
+        <a
+          href={`https://apps.atlasacademy.io/db/NA/craft-essence/${ce.id}`}
+          key="info"
+        >
+          <InfoCircleOutlined />
+        </a>,
+      ]}
       cover={
         <img
           alt={ce.name}
