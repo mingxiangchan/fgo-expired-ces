@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
 import { CeList } from "../components/CeList";
-import { CraftEssence, SortOptions } from "../types";
+import { PCraftEssence, SortOptions } from "../types";
 import fsPromises from "fs/promises";
 import path from "path";
 import { useState } from "react";
 import { Row, Col, Select } from "antd";
 
 type Props = {
-  craftEssences: CraftEssence[];
+  craftEssences: PCraftEssence[];
 };
 
 export async function getStaticProps() {

@@ -2,6 +2,38 @@ import get from "axios";
 import { readFileSync, writeFile } from "fs";
 import { Event, CraftEssence, PCraftEssence, PEvent } from "../types";
 
+const processCraftEssence = (
+  ce: CraftEssence,
+  eventIds: Set<number>,
+  eventsMap: Map<number, PEvent>
+): PCraftEssence => {
+  let hasRevival = false;
+
+  const processedEvents = Array.from(eventIds).map((eventId): PEvent => {
+    const result = eventsMap.get(eventId) as PEvent;
+
+    if (result.name.startsWith("Revival:")) {
+      hasRevival = true;
+    }
+
+    return result;
+  });
+
+  const processedCe: PCraftEssence = {
+    id: ce.id,
+    name: ce.name,
+    imageUrl: Object.values(ce.extraAssets.charaGraph.equip)[0],
+    effect: ce.skills[0]?.detail,
+    hasEvent: eventIds.size > 0,
+    hasRevival: hasRevival,
+    events: processedEvents,
+    atkBase: ce.atkBase,
+    hpBase: ce.hpBase,
+  };
+
+  return processedCe;
+};
+
 const queryFromApiOrCache = async <T>(
   source: string,
   cachePath: string
@@ -55,29 +87,7 @@ const parseEquips = async (
       }
     }
 
-    let hasRevival = false;
-
-    const processedEvents = Array.from(eventIds).map((eventId): PEvent => {
-      const result = eventsMap.get(eventId) as PEvent;
-
-      if (result.name.startsWith("Revival:")) {
-        hasRevival = true;
-      }
-
-      return result;
-    });
-
-    const processedCe: PCraftEssence = {
-      id: ce.id,
-      name: ce.name,
-      imageUrl: Object.values(ce.extraAssets.charaGraph.equip)[0],
-      effect: ce.skills[0]?.detail,
-      hasEvent: eventIds.size > 0,
-      hasRevival: hasRevival,
-      events: processedEvents,
-      atkBase: ce.atkBase,
-      hpBase: ce.hpBase,
-    };
+    const processedCe = processCraftEssence(ce, eventIds, eventsMap);
 
     processedCraftEssences.push(processedCe);
   }
