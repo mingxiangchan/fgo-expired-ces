@@ -3,6 +3,7 @@ export interface Event {
   name: string;
   type: string;
   shop: unknown[];
+  startedAt: number;
 }
 
 export interface CraftEssence {
@@ -25,8 +26,26 @@ export interface CraftEssence {
       funcGroup: {
         eventId: number;
       }[];
+      svals: {
+        EventId?: number;
+      }[];
     }[];
   }[];
+}
+
+export interface PEvent {
+  id: number;
+  name: string;
+  startedAt: string;
+}
+
+export interface PCraftEssence {
+  id: number;
+  name: string;
+  imageUrl: string;
+  effect: string;
+  events: PEvent[];
+  hasRevival: boolean;
 }
 
 export enum SortOptions {

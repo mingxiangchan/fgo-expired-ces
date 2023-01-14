@@ -1,0 +1,18 @@
+{
+    "configurations": [
+    {
+        "name": "Launch via NPM",
+        "request": "launch",
+        "runtimeArgs": [
+            "parse",
+            "debug"
+        ],
+        "runtimeExecutable": "yarn",
+        "skipFiles": [
+            "<node_internals>/**"
+        ],
+        "type": "node"
+    }
+    ]
+
+}

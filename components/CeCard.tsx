@@ -25,6 +25,8 @@ export const CeCard = ({ ce }: Props) => {
         <a
           href={`https://apps.atlasacademy.io/db/NA/craft-essence/${ce.id}`}
           key="info"
+          target="_blank"
+          rel="noreferrer"
         >
           <InfoCircleOutlined />
         </a>,

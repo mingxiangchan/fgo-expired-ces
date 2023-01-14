@@ -1,6 +1,6 @@
 import get from "axios";
 import { readFileSync, writeFile } from "fs";
-import { Event, CraftEssence } from "../types";
+import { Event, CraftEssence, PCraftEssence, PEvent } from "../types";
 
 const queryFromApiOrCache = async <T>(
   source: string,
@@ -27,30 +27,57 @@ const queryFromApiOrCache = async <T>(
   }
 };
 
-const parseEquips = async (eventIds: Set<number>): Promise<CraftEssence[]> => {
+const parseEquips = async (
+  eventsMap: Map<number, PEvent>
+): Promise<PCraftEssence[]> => {
   const source = "https://api.atlasacademy.io/export/NA/nice_equip.json";
-  const cachePath = "./equip.json";
+  const cachePath = "./cache/equip.json";
+
   const craftEssences = await queryFromApiOrCache<CraftEssence>(
     source,
     cachePath
   );
 
-  const expiredCraftEssences: CraftEssence[] = [];
+  const expiredEventIds = new Set(eventsMap.keys());
+
+  const expiredCraftEssences: PCraftEssence[] = [];
 
   for (const ce of craftEssences) {
-    const events = new Set<number>();
+    const eventIds = new Set<number>();
+
     for (const skill of ce.skills) {
       for (const func of skill.functions) {
-        for (const effect of func.funcGroup) {
-          if (effect.eventId && eventIds.has(effect.eventId)) {
-            events.add(effect.eventId);
+        for (const sval of func.svals) {
+          if (sval.EventId && expiredEventIds.has(sval.EventId)) {
+            eventIds.add(sval.EventId);
           }
         }
       }
     }
 
-    if (events.size > 1) {
-      expiredCraftEssences.push(ce);
+    if (eventIds.size > 0) {
+      let hasRevival = false;
+
+      const processedEvents = Array.from(eventIds).map((eventId): PEvent => {
+        const result = eventsMap.get(eventId) as PEvent;
+
+        if (result.name.startsWith("Revival:")) {
+          hasRevival = true;
+        }
+
+        return result;
+      });
+
+      const processedCe: PCraftEssence = {
+        id: ce.id,
+        name: ce.name,
+        imageUrl: Object.values(ce.extraAssets.charaGraph.equip)[0],
+        effect: ce.skills[0]?.detail,
+        hasRevival: hasRevival,
+        events: processedEvents,
+      };
+
+      expiredCraftEssences.push(processedCe);
     }
   }
 
@@ -58,15 +85,19 @@ const parseEquips = async (eventIds: Set<number>): Promise<CraftEssence[]> => {
   return expiredCraftEssences;
 };
 
-const parseEvents = async (): Promise<Set<number>> => {
+const parseEvents = async (): Promise<Map<number, PEvent>> => {
   const source = "https://api.atlasacademy.io/export/NA/nice_event.json";
-  const cachePath = "./event.json";
+  const cachePath = "./cache/event.json";
   const events = await queryFromApiOrCache<Event>(source, cachePath);
-  const relevantEvents = new Set<number>();
+  const relevantEvents: Map<number, PEvent> = new Map();
 
   for (const event of events) {
     if (event.type === "eventQuest" && event.shop.length > 0) {
-      relevantEvents.add(event.id);
+      relevantEvents.set(event.id, {
+        id: event.id,
+        name: event.name,
+        startedAt: new Date(event.startedAt * 1000).toISOString(),
+      });
     }
   }
 
@@ -74,8 +105,8 @@ const parseEvents = async (): Promise<Set<number>> => {
 };
 
 const main = async () => {
-  const eventIds = await parseEvents();
-  const expiredCraftEssences = await parseEquips(eventIds);
+  const eventsMap = await parseEvents();
+  const expiredCraftEssences = await parseEquips(eventsMap);
 
   const resultPath = "./public/results.json";
   writeFile(resultPath, JSON.stringify(expiredCraftEssences), (msg: unknown) =>
