@@ -46,6 +46,9 @@ export interface PCraftEssence {
   effect: string;
   events: PEvent[];
   hasRevival: boolean;
+  hasEvent: boolean;
+  atkBase: number;
+  hpBase: number;
 }
 
 export enum SortOptions {

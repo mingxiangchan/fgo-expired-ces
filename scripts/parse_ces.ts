@@ -40,7 +40,7 @@ const parseEquips = async (
 
   const expiredEventIds = new Set(eventsMap.keys());
 
-  const expiredCraftEssences: PCraftEssence[] = [];
+  const processedCraftEssences: PCraftEssence[] = [];
 
   for (const ce of craftEssences) {
     const eventIds = new Set<number>();
@@ -55,34 +55,35 @@ const parseEquips = async (
       }
     }
 
-    if (eventIds.size > 0) {
-      let hasRevival = false;
+    let hasRevival = false;
 
-      const processedEvents = Array.from(eventIds).map((eventId): PEvent => {
-        const result = eventsMap.get(eventId) as PEvent;
+    const processedEvents = Array.from(eventIds).map((eventId): PEvent => {
+      const result = eventsMap.get(eventId) as PEvent;
 
-        if (result.name.startsWith("Revival:")) {
-          hasRevival = true;
-        }
+      if (result.name.startsWith("Revival:")) {
+        hasRevival = true;
+      }
 
-        return result;
-      });
+      return result;
+    });
 
-      const processedCe: PCraftEssence = {
-        id: ce.id,
-        name: ce.name,
-        imageUrl: Object.values(ce.extraAssets.charaGraph.equip)[0],
-        effect: ce.skills[0]?.detail,
-        hasRevival: hasRevival,
-        events: processedEvents,
-      };
+    const processedCe: PCraftEssence = {
+      id: ce.id,
+      name: ce.name,
+      imageUrl: Object.values(ce.extraAssets.charaGraph.equip)[0],
+      effect: ce.skills[0]?.detail,
+      hasEvent: eventIds.size > 0,
+      hasRevival: hasRevival,
+      events: processedEvents,
+      atkBase: ce.atkBase,
+      hpBase: ce.hpBase,
+    };
 
-      expiredCraftEssences.push(processedCe);
-    }
+    processedCraftEssences.push(processedCe);
   }
 
-  console.log(expiredCraftEssences.length);
-  return expiredCraftEssences;
+  console.log(processedCraftEssences.length);
+  return processedCraftEssences;
 };
 
 const parseEvents = async (): Promise<Map<number, PEvent>> => {
