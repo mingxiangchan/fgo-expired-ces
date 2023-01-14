@@ -1,12 +1,30 @@
 import get from "axios";
-import { readFileSync, writeFile } from "fs";
+import { readFileSync, writeFile, createWriteStream } from "fs";
 import { Event, CraftEssence, PCraftEssence, PEvent } from "../types";
 
-const processCraftEssence = (
+const downloadCeImage = async (ce: PCraftEssence): Promise<string> => {
+  const filename = `public/assets/${ce.id}.png`;
+  const webFilepath = filename.substring(6);
+
+  try {
+    readFileSync(filename);
+    console.log(`Image exists: ${filename}`);
+    return webFilepath;
+  } catch (error) {
+    return get(ce.imageUrl, { responseType: "stream" }).then((response) => {
+      response.data.pipe(createWriteStream(filename));
+      console.log(`Downloaded image: ${filename}`);
+
+      return webFilepath;
+    });
+  }
+};
+
+const processCraftEssence = async (
   ce: CraftEssence,
   eventIds: Set<number>,
   eventsMap: Map<number, PEvent>
-): PCraftEssence => {
+): Promise<PCraftEssence> => {
   let hasRevival = false;
 
   const processedEvents = Array.from(eventIds).map((eventId): PEvent => {
@@ -22,7 +40,7 @@ const processCraftEssence = (
   const processedCe: PCraftEssence = {
     id: ce.id,
     name: ce.name,
-    imageUrl: Object.values(ce.extraAssets.charaGraph.equip)[0],
+    imageUrl: Object.values(ce.extraAssets.faces.equip)[0],
     effect: ce.skills[0]?.detail,
     hasEvent: eventIds.size > 0,
     hasRevival: hasRevival,
@@ -30,6 +48,8 @@ const processCraftEssence = (
     atkBase: ce.atkBase,
     hpBase: ce.hpBase,
   };
+
+  processedCe.imageUrl = await downloadCeImage(processedCe);
 
   return processedCe;
 };
@@ -87,7 +107,7 @@ const parseEquips = async (
       }
     }
 
-    const processedCe = processCraftEssence(ce, eventIds, eventsMap);
+    const processedCe = await processCraftEssence(ce, eventIds, eventsMap);
 
     processedCraftEssences.push(processedCe);
   }

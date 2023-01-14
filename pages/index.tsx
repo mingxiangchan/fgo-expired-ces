@@ -4,7 +4,7 @@ import { PCraftEssence, SortOptions } from "../types";
 import fsPromises from "fs/promises";
 import path from "path";
 import { useState } from "react";
-import { Row, Col, Select } from "antd";
+import { Row, Col, Select, Switch } from "antd";
 
 type Props = {
   craftEssences: PCraftEssence[];
@@ -27,6 +27,8 @@ const Home: NextPage<Props> = ({ craftEssences }) => {
     SortOptions.atkAsc
   );
 
+  const [showNonEvent, setNonEventFilter] = useState<boolean>(false);
+
   const sortOptions = Object.values(SortOptions).map((value) => ({
     value,
     label: value,
@@ -42,11 +44,24 @@ const Home: NextPage<Props> = ({ craftEssences }) => {
             onChange={setSorting}
             style={{ width: 300 }}
           />
+          <Switch
+            checked={showNonEvent}
+            checkedChildren={"Include Non Event CEs"}
+            unCheckedChildren={"Hide Non Event CEs"}
+            onChange={setNonEventFilter}
+            style={{
+              marginLeft: "2rem",
+            }}
+          />
         </Col>
       </Row>
       <Row>
         <Col offset={1} span={22}>
-          <CeList craftEssences={craftEssences} sortOption={selectedSorting} />
+          <CeList
+            craftEssences={craftEssences}
+            sortOption={selectedSorting}
+            showNonEvent={showNonEvent}
+          />
         </Col>
       </Row>
     </div>

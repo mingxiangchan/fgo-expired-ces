@@ -18,6 +18,11 @@ export interface CraftEssence {
         [id: string]: string;
       };
     };
+    faces: {
+      equip: {
+        [id: string]: string;
+      };
+    };
   };
   skills: {
     name: string;

@@ -1,36 +1,62 @@
 import { PCraftEssence } from "../types";
-import { Card, Typography } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Typography, List, Timeline, Row, Divider, Tag } from "antd";
+import Image from "next/image";
 
 type Props = {
   ce: PCraftEssence;
 };
 
 export const CeCard = ({ ce }: Props) => {
+  // const link = `https://apps.atlasacademy.io/db/NA/craft-essence/${ce.id}`
   return (
-    <Card
-      actions={[
-        <a
-          href={`https://apps.atlasacademy.io/db/NA/craft-essence/${ce.id}`}
-          key="info"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <InfoCircleOutlined />
-        </a>,
-      ]}
-      cover={<img alt={ce.name} src={ce.imageUrl} title={ce.imageUrl} />}
-    >
-      <Card.Meta
+    <>
+      <List.Item.Meta
+        avatar={
+          <Image
+            alt={ce.name}
+            src={ce.imageUrl}
+            title={ce.imageUrl}
+            height={128}
+            width={128}
+          />
+        }
         title={ce.name}
         description={
-          <Typography.Paragraph
-            ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
-          >
-            {ce.effect}
-          </Typography.Paragraph>
+          <>
+            <Row>
+              <Typography.Paragraph
+                ellipsis={{ rows: 3, expandable: true, symbol: "more" }}
+              >
+                {ce.effect}
+              </Typography.Paragraph>
+            </Row>
+            <Row>
+              {ce.hasEvent ? (
+                <Tag color="blue">Event</Tag>
+              ) : (
+                <Tag color="grey">No Event</Tag>
+              )}
+              {ce.hasRevival ? <Tag color="red">Revival</Tag> : null}
+            </Row>
+            {ce.hasEvent === false ? null : (
+              <>
+                <Divider orientation="left">Past Events</Divider>
+                <Row>
+                  <Timeline>
+                    {ce.events.map((event) => (
+                      <Timeline.Item key={event.id}>
+                        {new Date(event.startedAt).toLocaleDateString()}
+                        <Divider type="vertical" />
+                        {event.name}
+                      </Timeline.Item>
+                    ))}
+                  </Timeline>
+                </Row>
+              </>
+            )}
+          </>
         }
-      />
-    </Card>
+      ></List.Item.Meta>
+    </>
   );
 };

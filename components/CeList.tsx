@@ -1,15 +1,19 @@
-import { CraftEssence, SortOptions } from "../types";
+import { PCraftEssence, SortOptions } from "../types";
 import { List } from "antd";
 import { CeCard } from "./CeCard";
-import { NUM_COLUMNS } from "../utils/constants";
+import { CONTAINER_HEIGHT, ITEM_HEIGHT } from "../utils/constants";
+import VirtualList from "rc-virtual-list";
 
 type Props = {
-  craftEssences: CraftEssence[];
+  craftEssences: PCraftEssence[];
   sortOption: SortOptions;
+  showNonEvent: boolean;
 };
 
-export const CeList = ({ craftEssences, sortOption }: Props) => {
-  const sortedCes = [...craftEssences];
+export const CeList = ({ craftEssences, sortOption, showNonEvent }: Props) => {
+  const sortedCes = showNonEvent
+    ? [...craftEssences]
+    : craftEssences.filter((ce) => ce.hasEvent);
 
   // sort by ascending base atk
   sortedCes.sort((first, second) => {
@@ -20,32 +24,50 @@ export const CeList = ({ craftEssences, sortOption }: Props) => {
       return first.name < second.name ? 1 : -1;
     }
     if (sortOption === SortOptions.atkAsc) {
+      if (first.atkBase === second.atkBase) {
+        return first.id > second.atkBase ? 1 : -1;
+      }
+
       return first.atkBase > second.atkBase ? 1 : -1;
     }
     if (sortOption === SortOptions.atkDesc) {
+      if (first.atkBase === second.atkBase) {
+        return first.id > second.atkBase ? 1 : -1;
+      }
+
       return first.atkBase < second.atkBase ? 1 : -1;
     }
     if (sortOption === SortOptions.hpAsc) {
+      if (first.hpBase === second.hpBase) {
+        return first.id > second.atkBase ? 1 : -1;
+      }
+
       return first.hpBase > second.hpBase ? 1 : -1;
     }
     if (sortOption === SortOptions.hpDesc) {
+      if (first.hpBase === second.hpBase) {
+        return first.id > second.atkBase ? 1 : -1;
+      }
+
       return first.hpBase < second.hpBase ? 1 : -1;
     }
     return 0;
   });
 
   return (
-    <List
-      dataSource={sortedCes}
-      grid={{
-        gutter: 0,
-        column: NUM_COLUMNS,
-      }}
-      renderItem={(item) => (
-        <List.Item>
-          <CeCard ce={item} />
-        </List.Item>
-      )}
-    ></List>
+    <List>
+      <VirtualList
+        data={sortedCes}
+        height={CONTAINER_HEIGHT}
+        itemHeight={ITEM_HEIGHT}
+        itemKey="id"
+      >
+        {(item: PCraftEssence) => (
+          <List.Item key={item.id}>
+            <CeCard ce={item} />
+          </List.Item>
+        )}
+      </VirtualList>
+    </List>
   );
 };
