@@ -3,15 +3,18 @@ import { List } from "antd";
 import { CeCard } from "./CeCard";
 import { CONTAINER_HEIGHT, ITEM_HEIGHT } from "../utils/constants";
 import VirtualList from "rc-virtual-list";
+import { useAppSelector } from "../utils/store";
+import { includeNonEvent, sorting } from "../utils/reducers/filtersReducer";
 
 type Props = {
   craftEssences: PCraftEssence[];
-  sortOption: SortOptions;
-  showNonEvent: boolean;
 };
 
-export const CeList = ({ craftEssences, sortOption, showNonEvent }: Props) => {
-  const sortedCes = showNonEvent
+export const CeList = ({ craftEssences }: Props) => {
+  const includeNonEventOpt = useAppSelector(includeNonEvent);
+  const sortOption = useAppSelector(sorting);
+
+  const sortedCes = includeNonEventOpt
     ? [...craftEssences]
     : craftEssences.filter((ce) => ce.hasEvent);
 

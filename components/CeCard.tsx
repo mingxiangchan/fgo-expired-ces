@@ -45,8 +45,8 @@ export const CeCard = ({ ce }: Props) => {
                   <Timeline>
                     {ce.events.map((event) => (
                       <Timeline.Item key={event.id}>
-                        {new Date(event.startedAt).toLocaleDateString()}
-                        <Divider type="vertical" />
+                        {event.startedAt.split("T")[0]}
+                        <br />
                         {event.name}
                       </Timeline.Item>
                     ))}

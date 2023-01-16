@@ -5,16 +5,11 @@ import styles from "../styles/PageLayout.module.css";
 
 export const PageLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Layout hasSider>
-      <Layout className={styles["site-layout"]}>
-        <Header
-          className="site-layout-background"
-          style={{
-            padding: 0,
-          }}
-        ></Header>
-        <Content className={styles.content}>{children}</Content>
-      </Layout>
+    <Layout>
+      <Header className={styles.header}>
+        <div className={styles.logo}>FGO Past Event CE List</div>
+      </Header>
+      <Content className={styles.content}>{children}</Content>
     </Layout>
   );
 };
