@@ -12,6 +12,7 @@ export interface CraftEssence {
   atkBase: number;
   hpBase: number;
   cost: number;
+  rarity: number;
   extraAssets: {
     charaGraph: {
       equip: {
@@ -54,6 +55,7 @@ export interface PCraftEssence {
   hasEvent: boolean;
   atkBase: number;
   hpBase: number;
+  rarity: number;
 }
 
 export enum SortOptions {

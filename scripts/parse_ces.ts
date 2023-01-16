@@ -47,6 +47,7 @@ const processCraftEssence = async (
     events: processedEvents,
     atkBase: ce.atkBase,
     hpBase: ce.hpBase,
+    rarity: ce.rarity,
   };
 
   processedCe.imageUrl = await downloadCeImage(processedCe);

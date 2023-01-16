@@ -7,14 +7,15 @@ import { RootState } from "../store";
 interface FiltersState {
   sorting: SortOptions;
   includeNonEvent: boolean;
-  rarity: Set<number>;
+  // use number since Set is not serialize and goes against redux best practice
+  rarity: number[];
 }
 
 // Define the initial state using that type
 const initialState: FiltersState = {
   sorting: SortOptions.atkAsc,
   includeNonEvent: false,
-  rarity: new Set([1, 2, 3, 4, 5]),
+  rarity: [1, 2, 3, 4, 5],
 };
 
 export const filtersSlice = createSlice({
@@ -29,10 +30,10 @@ export const filtersSlice = createSlice({
       state.includeNonEvent = action.payload;
     },
     includeRarity: (state, action: PayloadAction<number>) => {
-      state.rarity = state.rarity.add(action.payload);
+      state.rarity.push(action.payload);
     },
     excludeRarity: (state, action: PayloadAction<number>) => {
-      state.rarity.delete(action.payload);
+      state.rarity = state.rarity.filter((rarity) => rarity !== action.payload);
     },
   },
 });

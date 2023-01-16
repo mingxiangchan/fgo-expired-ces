@@ -1,5 +1,5 @@
 import { PCraftEssence } from "../types";
-import { Typography, List, Timeline, Row, Divider, Tag } from "antd";
+import { Typography, List, Timeline, Row, Divider, Tag, Rate } from "antd";
 import Image from "next/image";
 
 type Props = {
@@ -20,7 +20,12 @@ export const CeCard = ({ ce }: Props) => {
             width={128}
           />
         }
-        title={ce.name}
+        title={
+          <>
+            <span style={{ marginRight: "1em" }}>{ce.name}</span>
+            <Rate disabled defaultValue={ce.rarity} />
+          </>
+        }
         description={
           <>
             <Row>

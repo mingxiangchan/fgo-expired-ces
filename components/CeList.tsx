@@ -4,7 +4,11 @@ import { CeCard } from "./CeCard";
 import { CONTAINER_HEIGHT, ITEM_HEIGHT } from "../utils/constants";
 import VirtualList from "rc-virtual-list";
 import { useAppSelector } from "../utils/store";
-import { includeNonEvent, sorting } from "../utils/reducers/filtersReducer";
+import {
+  includeNonEvent,
+  rarity,
+  sorting,
+} from "../utils/reducers/filtersReducer";
 
 type Props = {
   craftEssences: PCraftEssence[];
@@ -13,10 +17,15 @@ type Props = {
 export const CeList = ({ craftEssences }: Props) => {
   const includeNonEventOpt = useAppSelector(includeNonEvent);
   const sortOption = useAppSelector(sorting);
+  const includedRarities = useAppSelector(rarity);
 
-  const sortedCes = includeNonEventOpt
+  let sortedCes = includeNonEventOpt
     ? [...craftEssences]
     : craftEssences.filter((ce) => ce.hasEvent);
+
+  sortedCes = sortedCes.filter((ce) => {
+    return includedRarities.indexOf(ce.rarity) !== -1;
+  });
 
   // sort by ascending base atk
   sortedCes.sort((first, second) => {
