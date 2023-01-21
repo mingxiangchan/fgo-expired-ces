@@ -1,7 +1,9 @@
-const { Header, Content } = Layout;
 import { Layout } from "antd";
+import Link from "next/link";
 import { PropsWithChildren } from "react";
 import styles from "../styles/PageLayout.module.css";
+
+const { Header, Content, Footer } = Layout;
 
 export const PageLayout = ({ children }: PropsWithChildren) => {
   return (
@@ -10,6 +12,10 @@ export const PageLayout = ({ children }: PropsWithChildren) => {
         <div className={styles.logo}>FGO Past Event CE List</div>
       </Header>
       <Content className={styles.content}>{children}</Content>
+      <Footer style={{ textAlign: "center" }}>
+        Import on 2023-01-21 from{" "}
+        <Link href="https://atlasacademy.io/data/">Atlas Academy</Link>
+      </Footer>
     </Layout>
   );
 };
