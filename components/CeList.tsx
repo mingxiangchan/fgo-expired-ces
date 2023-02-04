@@ -1,91 +1,32 @@
-import { PCraftEssence, SortOptions } from "../types";
+import { PCraftEssence } from "../types";
 import { List } from "antd";
 import { CeCard } from "./CeCard";
 import { CONTAINER_HEIGHT, ITEM_HEIGHT } from "../utils/constants";
 import VirtualList, { ListRef } from "rc-virtual-list";
 import { useAppSelector } from "../utils/store";
-import {
-  includeNonEvent,
-  rarity,
-  sorting,
-  searchInput,
-} from "../utils/reducers/filtersReducer";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+import { craftEssencesDisplayedItems } from "../utils/reducers/craftEssencesReducer";
+import { filtersSearchInput } from "../utils/reducers/filtersReducer";
 
-type Props = {
-  craftEssences: PCraftEssence[];
-};
-
-export const CeList = ({ craftEssences }: Props) => {
+export const CeList = () => {
   const virtualListRef = useRef<ListRef>(null);
   const cardRefs = useRef<Record<number, HTMLElement>>({});
 
-  const includeNonEventOpt = useAppSelector(includeNonEvent);
-  const sortOption = useAppSelector(sorting);
-  const includedRarities = useAppSelector(rarity);
-  const selectedSearchInput = useAppSelector(searchInput);
-
-  let sortedCes = useMemo(() => {
-    return includeNonEventOpt
-      ? [...craftEssences]
-      : craftEssences.filter((ce) => ce.hasEvent);
-  }, [includeNonEventOpt, craftEssences]);
-
-  sortedCes = sortedCes.filter((ce) => {
-    return includedRarities.indexOf(ce.rarity) !== -1;
-  });
-
-  // sort by ascending base atk
-  sortedCes.sort((first, second) => {
-    if (sortOption === SortOptions.alpAsc) {
-      return first.name > second.name ? 1 : -1;
-    }
-    if (sortOption === SortOptions.alpDesc) {
-      return first.name < second.name ? 1 : -1;
-    }
-    if (sortOption === SortOptions.atkAsc) {
-      if (first.atkBase === second.atkBase) {
-        return first.id > second.atkBase ? 1 : -1;
-      }
-
-      return first.atkBase > second.atkBase ? 1 : -1;
-    }
-    if (sortOption === SortOptions.atkDesc) {
-      if (first.atkBase === second.atkBase) {
-        return first.id > second.atkBase ? 1 : -1;
-      }
-
-      return first.atkBase < second.atkBase ? 1 : -1;
-    }
-    if (sortOption === SortOptions.hpAsc) {
-      if (first.hpBase === second.hpBase) {
-        return first.id > second.atkBase ? 1 : -1;
-      }
-
-      return first.hpBase > second.hpBase ? 1 : -1;
-    }
-    if (sortOption === SortOptions.hpDesc) {
-      if (first.hpBase === second.hpBase) {
-        return first.id > second.atkBase ? 1 : -1;
-      }
-
-      return first.hpBase < second.hpBase ? 1 : -1;
-    }
-    return 0;
-  });
+  const displayedItems = useAppSelector(craftEssencesDisplayedItems);
+  const searchInput = useAppSelector(filtersSearchInput);
 
   useEffect(() => {
     const listContainer = virtualListRef.current;
     let toScroll = 0;
 
-    if (selectedSearchInput === null) {
+    if (searchInput === null) {
       listContainer?.scrollTo(toScroll);
       return;
     }
 
-    for (const idx in sortedCes) {
-      const ce = sortedCes[idx];
-      if (ce.id !== selectedSearchInput) {
+    for (const idx in displayedItems) {
+      const ce = displayedItems[idx];
+      if (ce.id !== searchInput) {
         toScroll += ITEM_HEIGHT;
       } else {
         break;
@@ -94,12 +35,12 @@ export const CeList = ({ craftEssences }: Props) => {
 
     listContainer?.scrollTo(0);
     listContainer?.scrollTo(toScroll);
-  }, [selectedSearchInput, sortedCes]);
+  }, [searchInput, displayedItems]);
 
   return (
     <List>
       <VirtualList
-        data={sortedCes}
+        data={displayedItems}
         height={CONTAINER_HEIGHT}
         itemHeight={ITEM_HEIGHT}
         itemKey="id"

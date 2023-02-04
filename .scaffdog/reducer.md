@@ -36,7 +36,7 @@ export const {{ inputs.name | camel }}Slice = createSlice({
 export const { initialize } = {{ inputs.name | camel }}Slice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const initialize = (state: RootState) => state.{{ inputs.name | camel }}.initial;
+export const {{ inputs.name | camel}}Initial  = (state: RootState) => state.{{ inputs.name | camel }}.initial;
 
 export const {{ inputs.name | camel }}Reducer = {{ inputs.name | camel }}Slice.reducer;
 ```

@@ -4,11 +4,11 @@ import { SortOptions } from "../../types";
 import { RootState } from "../store";
 
 // Define a type for the slice state
-interface FiltersState {
+export interface FiltersState {
   sorting: SortOptions;
   includeNonEvent: boolean;
   // use number since Set is not serialize and goes against redux best practice
-  rarity: number[];
+  rarities: number[];
   searchInput: number | null;
 }
 
@@ -16,7 +16,7 @@ interface FiltersState {
 const initialState: FiltersState = {
   sorting: SortOptions.atkAsc,
   includeNonEvent: false,
-  rarity: [1, 2, 3, 4, 5],
+  rarities: [1, 2, 3, 4, 5],
   searchInput: null,
 };
 
@@ -33,11 +33,13 @@ export const filtersSlice = createSlice({
       state.searchInput = null;
     },
     includeRarity: (state, action: PayloadAction<number>) => {
-      state.rarity.push(action.payload);
+      state.rarities.push(action.payload);
       state.searchInput = null;
     },
     excludeRarity: (state, action: PayloadAction<number>) => {
-      state.rarity = state.rarity.filter((rarity) => rarity !== action.payload);
+      state.rarities = state.rarities.filter(
+        (rarity) => rarity !== action.payload
+      );
       state.searchInput = null;
     },
     setSearchInput: (state, action: PayloadAction<number | null>) => {
@@ -55,10 +57,11 @@ export const {
 } = filtersSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const sorting = (state: RootState) => state.filters.sorting;
-export const includeNonEvent = (state: RootState) =>
+export const filtersSorting = (state: RootState) => state.filters.sorting;
+export const filtersIncludeNonEvent = (state: RootState) =>
   state.filters.includeNonEvent;
-export const rarity = (state: RootState) => state.filters.rarity;
-export const searchInput = (state: RootState) => state.filters.searchInput;
+export const filtersRarities = (state: RootState) => state.filters.rarities;
+export const filtersSearchInput = (state: RootState) =>
+  state.filters.searchInput;
 
 export const filtersReducer = filtersSlice.reducer;

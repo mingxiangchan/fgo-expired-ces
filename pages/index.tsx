@@ -5,6 +5,9 @@ import fsPromises from "fs/promises";
 import path from "path";
 import { Row, Col } from "antd";
 import { ListFilters } from "../components/ListFilters";
+import { useEffect } from "react";
+import { useAppDispatch } from "../utils/store";
+import { initialize } from "../utils/reducers/craftEssencesReducer";
 
 type Props = {
   craftEssences: PCraftEssence[];
@@ -23,12 +26,18 @@ export async function getStaticProps() {
 }
 
 const Home: NextPage<Props> = ({ craftEssences }) => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(initialize(craftEssences));
+  }, [dispatch, craftEssences]);
+
   return (
     <div>
-      <ListFilters craftEssences={craftEssences} />
+      <ListFilters />
       <Row>
         <Col offset={1} span={22}>
-          <CeList craftEssences={craftEssences} />
+          <CeList />
         </Col>
       </Row>
     </div>

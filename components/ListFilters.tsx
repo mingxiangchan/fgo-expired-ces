@@ -1,53 +1,59 @@
-import { PCraftEssence, SortOptions } from "../types";
+import { SortOptions } from "../types";
 import { Row, Col, Select, Switch } from "antd";
 import { useAppDispatch, useAppSelector } from "../utils/store";
 import {
   excludeRarity,
-  includeNonEvent,
   includeRarity,
-  rarity,
   setIncludeNonEvent,
   setSorting,
   setSearchInput,
-  searchInput,
+  filtersSorting,
+  filtersSearchInput,
+  filtersIncludeNonEvent,
+  filtersRarities,
 } from "../utils/reducers/filtersReducer";
 import styles from "../styles/ListFilters.module.css";
-
-type Props = {
-  craftEssences: PCraftEssence[];
-};
+import {
+  craftEssencesDisplayedItems,
+  setDisplayedItems,
+} from "../utils/reducers/craftEssencesReducer";
+import { useEffect } from "react";
 
 type SearchOptionType = {
   value: number;
   label: string;
 };
 
-export const ListFilters = ({ craftEssences }: Props) => {
-  const includeNonEventFilter = useAppSelector(includeNonEvent);
-  const includedRarities = useAppSelector(rarity);
-  const selectedSearchInput = useAppSelector(searchInput);
+export const ListFilters = () => {
+  const sorting = useAppSelector(filtersSorting);
+  const includeNonEvent = useAppSelector(filtersIncludeNonEvent);
+  const rarities = useAppSelector(filtersRarities);
+  const searchInput = useAppSelector(filtersSearchInput);
+  const displayedItems = useAppSelector(craftEssencesDisplayedItems);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(
+      setDisplayedItems({
+        sorting,
+        includeNonEvent,
+        rarities,
+      })
+    );
+  }, [dispatch, sorting, includeNonEvent, rarities]);
 
   const sortOptions = Object.values(SortOptions).map((value) => ({
     value,
     label: value,
   }));
 
-  const searchOptions = craftEssences
-    .filter((ce) => {
-      if (includeNonEventFilter === false && ce.hasEvent === false) {
-        return false;
-      }
-
-      return includedRarities.indexOf(ce.rarity) !== -1;
-    })
-    .map((ce) => {
-      return {
-        value: ce.id,
-        label: ce.name,
-      };
-    });
+  const searchOptions = displayedItems.map((ce) => {
+    return {
+      value: ce.id,
+      label: ce.name,
+    };
+  });
 
   return (
     <>
@@ -68,7 +74,7 @@ export const ListFilters = ({ craftEssences }: Props) => {
         </Col>
         <Col xs={22} lg={3} className={styles.input}>
           <Switch
-            checked={includeNonEventFilter}
+            checked={includeNonEvent}
             checkedChildren={"Include Non Event CEs"}
             unCheckedChildren={"Hide Non Event CEs"}
             onChange={(option: boolean) => dispatch(setIncludeNonEvent(option))}
@@ -79,7 +85,7 @@ export const ListFilters = ({ craftEssences }: Props) => {
         </Col>
         <Col xs={22} lg={6} className={styles.input}>
           {[1, 2, 3, 4, 5].map((rarityOpt) => {
-            const included = includedRarities.indexOf(rarityOpt) !== -1;
+            const included = rarities.indexOf(rarityOpt) !== -1;
 
             return (
               <Switch
@@ -119,7 +125,7 @@ export const ListFilters = ({ craftEssences }: Props) => {
             onClear={() => {
               dispatch(setSearchInput(null));
             }}
-            value={selectedSearchInput}
+            value={searchInput}
           />
         </Col>
       </Row>
