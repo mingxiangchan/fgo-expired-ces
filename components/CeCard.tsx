@@ -52,7 +52,15 @@ export const CeCard = ({ ce }: Props) => {
                       <Timeline.Item key={event.id}>
                         {event.startedAt.split("T")[0]}
                         <br />
-                        {event.name}
+                        <Typography.Paragraph
+                          ellipsis={{
+                            rows: 2,
+                            expandable: true,
+                            symbol: "more",
+                          }}
+                        >
+                          {event.name}
+                        </Typography.Paragraph>
                       </Timeline.Item>
                     ))}
                   </Timeline>

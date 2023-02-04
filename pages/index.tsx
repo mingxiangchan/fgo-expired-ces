@@ -25,7 +25,7 @@ export async function getStaticProps() {
 const Home: NextPage<Props> = ({ craftEssences }) => {
   return (
     <div>
-      <ListFilters />
+      <ListFilters craftEssences={craftEssences} />
       <Row>
         <Col offset={1} span={22}>
           <CeList craftEssences={craftEssences} />
