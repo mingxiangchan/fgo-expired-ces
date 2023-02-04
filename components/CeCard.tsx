@@ -36,6 +36,8 @@ export const CeCard = ({ ce }: Props) => {
               </Typography.Paragraph>
             </Row>
             <Row>
+              <Tag>Base ATK: {ce.atkBase}</Tag>
+              <Tag>Base HP: {ce.hpBase}</Tag>
               {ce.hasEvent ? (
                 <Tag color="blue">Event</Tag>
               ) : (
